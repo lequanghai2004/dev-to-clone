@@ -1,33 +1,23 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file: https://pris.ly/d/prisma-schema
+// Migrate docs: https://www.prisma.io/docs/orm/prisma-migrate/getting-started
 
 generator client {
-    provider = "prisma-client-js"
+    provider = "prisma-client-js" // Generates a TypeScript/JavaScript client
 }
 
 datasource db {
     provider = "postgresql"
+    // Supported providers: postgresql, mysql, sqlite, sqlserver, mongodb
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    url      = env("DATABASE_URL") // Connection string
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
-// Necessary for Next auth
+// ********** Necessary for Next auth **********
 model Account {
+    // For next-auth
     id                       String  @id @default(cuid())
     userId                   String
     type                     String
@@ -47,15 +37,16 @@ model Account {
 }
 
 model Session {
+    // For next-auth
     id           String   @id @default(cuid())
     sessionToken String   @unique
-    userId       String
     expires      DateTime
+    userId       String
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    // Necessary for Next auth
+    // For next-auth
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
@@ -63,15 +54,118 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
-    
-    // Other user fields
+
+    // User Profile
+    username  String?  @unique
+    imageUrl  String?
+    color     String?  @default("#E0A64E")
+    biography String?
+    location  String?
+    education String?
+    pronouns  String?
+    work      String?
+    createdAt DateTime @default(now())
+    github    String?
+    linkedin  String?
+    website   String?
+
+    // Relationships
+    articles      Article[] // One-to-many relationship with Article
+    comments      Comment[] // One-to-many relationship with Comment
+    organizations Organization[] @relation("UserOrganizations") // Many-to-many with Organization
+    Organization  Organization[]
+}
+
+model Organization {
+    id          String  @id @default(cuid())
+    name        String
+    ownerId     String
+    imageUrl    String? // URL for organization profile image
+    description String?
+    createdAt   String?
+
+    owner    User      @relation(fields: [ownerId], references: [id]) // One-to-one relationship with User
+    users    User[]    @relation("UserOrganizations") // Many-to-many relationship with User
+    articles Article[] // One-to-many relationship with Articles
+
+    website String?
+    email   String?
 }
 
 model VerificationToken {
+    // For next-auth
     identifier String
     token      String   @unique
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// ********** Custom tables **********
+model Article {
+    id                   String    @id @default(cuid())
+    title                String
+    path                 String?   @unique // Ensures article paths are unique
+    userId               String // Foreign key to User
+    organizationId       String? // Foreign key to Organization
+    commentsCount        Int       @default(0) // Count of comments for this article
+    reactionsCount       Int       @default(0) // Reactions count
+    publishedAt          DateTime  @default(now())
+    editedAt             DateTime?
+    userName             String? // Redundant, to avoid joining user table for article owner
+    userImageUrl         String? // Redundant, to avoid joining user table for article owner
+    organizationName     String? // Redundant, for articles belonging to organizations
+    organizationImageUrl String? // Redundant, for articles belonging to organizations
+    imageUrl             String? // Main image of the article
+    tagList              String[]
+    content              String    @db.Text // Full content
+
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to User
+    organization Organization? @relation(fields: [organizationId], references: [id]) // Optional relation to Organization
+    comments     Comment[]     @relation("ArticleComments") // One-to-many relationship with comments
+    tags         Tag[]         @relation("ArticleTags") // Many-to-many
+    ArticleTag   ArticleTag[]
+
+    @@index([path]) // Index for faster querying by article path
+}
+
+model Comment {
+    id              String    @id @default(cuid())
+    articleId       String // Foreign key to Article
+    userId          String // Foreign key to User
+    publishedAt     DateTime  @default(now())
+    editedAt        DateTime?
+    content         String
+    userName        String? // Redundant for performance (user's username)
+    userImageUrl    String? // Redundant for performance (user's profile image URL)
+    parentCommentId Int? // For nested replies (optional)
+    deletedAt       DateTime? @db.Timestamptz
+
+    article Article @relation("ArticleComments", fields: [articleId], references: [id], onDelete: Cascade) // Relation to Article
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to User
+
+    @@index([articleId, publishedAt]) // Index for efficient querying by article and publication date
+    @@index([parentCommentId]) // Optional index for threaded comments
+}
+
+model Tag {
+    id          String       @id @default(cuid())
+    name        String       @unique
+    description String?
+    articles    Article[]    @relation("ArticleTags")
+    ArticleTag  ArticleTag[]
+
+    @@index([name])
+}
+
+model ArticleTag {
+    articleId String
+    tagId     String
+    article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+    tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+
+    @@id([articleId, tagId])
+    @@index([tagId, createdAt]) // For efficient tag-based article queries
+    @@index([articleId, createdAt]) // For efficient article-based tag queries
 }

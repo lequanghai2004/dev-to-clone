@@ -1,30 +1,28 @@
-import "server-only";
+import 'server-only';
 
-import { createHydrationHelpers } from "@trpc/react-query/rsc";
-import { headers } from "next/headers";
-import { cache } from "react";
+import { createHydrationHelpers } from '@trpc/react-query/rsc';
+import { headers } from 'next/headers';
+import { cache } from 'react';
 
-import { createCaller, type AppRouter } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
-import { createQueryClient } from "./query-client";
+import { createCallerFactory, createTRPCContext } from '~/server/api/root';
+import { appRouter, type AppRouter } from '~/server/api/routes';
+import { createQueryClient } from './query';
 
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-const createContext = cache(async () => {
-  const heads = new Headers(await headers());
-  heads.set("x-trpc-source", "rsc");
+// Create a server-side caller for the tRPC API.
+const createCaller = createCallerFactory(appRouter);
 
-  return createTRPCContext({
-    headers: heads,
-  });
-});
+// Wrap the `createTRPCContext` helper
+// Provides context for tRPC API when call from server component.
+const appCaller = createCaller(
+    cache(async () => {
+        const heads = new Headers(await headers());
+        heads.set('x-trpc-source', 'rsc');
 
-const getQueryClient = cache(createQueryClient);
-const caller = createCaller(createContext);
-
-export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
-  caller,
-  getQueryClient
+        return createTRPCContext({
+            headers: heads,
+        });
+    })
 );
+
+// API gateway for server side
+export const { trpc, HydrateClient } = createHydrationHelpers<AppRouter>(appCaller, cache(createQueryClient));

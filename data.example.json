@@ -1,0 +1,102 @@
+[
+    {
+        "type_of": "article",
+        "id": 254,
+        "title": "All the King's Men175",
+        "description": "Typewriter crucifix forage. Pug put a bird on it art party taxidermy asymmetrical xoxo. Sustainable...",
+        "readable_publish_date": "Apr 14",
+        "slug": "all-the-kings-men175-794",
+        "path": "/username387/all-the-kings-men175-794",
+        "url": "http://localhost:3000/username387/all-the-kings-men175-794",
+        "comments_count": 0,
+        "public_reactions_count": 0,
+        "collection_id": null,
+        "published_timestamp": "2023-04-14T14:45:32Z",
+        "positive_reactions_count": 0,
+        "cover_image": "http://localhost:3000/assets/36-83d24fbff858b9dd4035d1e7d2df14090946ae4fed631055fc1d5862e7018348.png",
+        "social_image": "http://localhost:3000/assets/36-83d24fbff858b9dd4035d1e7d2df14090946ae4fed631055fc1d5862e7018348.png",
+        "canonical_url": "http://localhost:3000/username387/all-the-kings-men175-794",
+        "created_at": "2023-04-14T14:45:32Z",
+        "edited_at": null,
+        "crossposted_at": null,
+        "published_at": "2023-04-14T14:45:32Z",
+        "last_comment_at": "2023-04-14T14:45:32Z",
+        "reading_time_minutes": 1,
+        "tag_list": ["discuss"],
+        "tags": "discuss",
+        "user": {
+            "name": "Versie \"Luana\" \\:/ Runolfsson",
+            "username": "username387",
+            "twitter_username": "twitter387",
+            "github_username": "github387",
+            "user_id": 1308,
+            "website_url": null,
+            "profile_image": "/uploads/user/profile_image/1308/dfa25219-dfea-4d9a-93ec-403a5f51a29e.jpeg",
+            "profile_image_90": "/uploads/user/profile_image/1308/dfa25219-dfea-4d9a-93ec-403a5f51a29e.jpeg"
+        },
+        "organization": {
+            "name": "Ledner, Jaskolski and Bednar",
+            "username": "org70",
+            "slug": "org70",
+            "profile_image": "/uploads/organization/profile_image/295/216d3fb5-bd3c-459a-a9d8-572e8332fd88.png",
+            "profile_image_90": "/uploads/organization/profile_image/295/216d3fb5-bd3c-459a-a9d8-572e8332fd88.png"
+        },
+        "flare_tag": {
+            "name": "discuss",
+            "bg_color_hex": "#000000",
+            "text_color_hex": "#ffffff"
+        }
+    },
+    {
+        "type_of": "user",
+        "id": 1308,
+        "username": "nevotheless",
+        "name": "Tim",
+        "twitter_username": "nevotheless",
+        "github_username": "nevotheless",
+        "summary": "I'm a guy who likes to build infrastructure, being involved in ops optimization and i like to automate things. That's the me.",
+        "location": "Germany",
+        "website_url": "https://arctium.io",
+        "joined_at": "Jan  4, 2017",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=320,height=320,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1308%2F779797.jpeg"
+    },
+    {
+        "type_of": "comment",
+        "id_code": "54",
+        "created_at": "2023-04-14T14:45:35Z",
+        "body_html": "<p>Ramps tacos jean shorts humblebrag street bicycle rights paleo. Actually green juice chartreuse tattooed cliche. 8-bit bushwick diy aesthetic.</p>\n\n",
+        "user": {
+            "name": "Santos \"Broderick\" \\:/ Lemke",
+            "username": "username414",
+            "twitter_username": "twitter414",
+            "github_username": "github414",
+            "user_id": 1339,
+            "website_url": null,
+            "profile_image": "/uploads/user/profile_image/1339/08f5cd26-743e-4957-af23-540b7ded60d6.jpeg",
+            "profile_image_90": "/uploads/user/profile_image/1339/08f5cd26-743e-4957-af23-540b7ded60d6.jpeg"
+        },
+        "children": []
+    },
+    {
+        "type_of": "nextauth",
+        "user": {
+            "id": "cm5cpawsl0005uhn3ti6ngpcq",
+            "name": "Lê Quang Hải",
+            "email": "lequanghai1301@gmail.com",
+            "emailVerified": null,
+            "image": "https://lh3.googleusercontent.com/a/ACg8ocJF_ZjFsT7zRQSQaFmLvE7N4IGV2pW6LdKStN_DJ7tpsniv1g=s96-c",
+            "username": null,
+            "imageUrl": null,
+            "color": "#E0A64E",
+            "biography": null,
+            "location": null,
+            "education": null,
+            "pronouns": null,
+            "work": null
+        },
+        "id": "cm5cpawxn0009uhn38vjae7hn",
+        "sessionToken": "aa0211a8-343e-4fd8-82c1-4d037c3cec29",
+        "expires": "2025-01-30T16:46:55.547Z",
+        "userId": "cm5cpawsl0005uhn3ti6ngpcq"
+    }
+]
