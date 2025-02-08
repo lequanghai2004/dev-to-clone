@@ -69,18 +69,20 @@ export const articleRouter = createTRPCRouter({
         }
     }),
 
-    getByUser: protectedProcedure.input(z.object({ userId: z.string() })).query(async ({ ctx, input }) => {
-        try {
-            const articles = await ctx.db.article.findMany({
-                where: { userId: input.userId },
-                orderBy: { publishedAt: 'desc' },
-                take: 10,
-            });
-            return { success: true, data: { articles } };
-        } catch (error) {
-            return { success: false, data: { error } };
-        }
-    }),
+    getByUser: publicProcedure
+        .input(z.object({ userId: z.string(), limit: z.number().min(1).max(50).default(10).optional() }))
+        .query(async ({ ctx, input }) => {
+            try {
+                const articles = await ctx.db.article.findMany({
+                    where: { userId: input.userId },
+                    orderBy: { publishedAt: 'desc' },
+                    take: input.limit,
+                });
+                return { success: true, data: { articles } };
+            } catch (error) {
+                return { success: false, data: { error } };
+            }
+        }),
 
     getByTags: publicProcedure
         .input(

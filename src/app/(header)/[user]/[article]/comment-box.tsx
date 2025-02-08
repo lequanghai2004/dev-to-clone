@@ -17,6 +17,7 @@ const CommentBox = ({ articleId }: { articleId: string }) => {
     const [isPreview, setIsPreview] = useState<boolean>(false);
     const getS3ImageUploadUrl = trpc.image.getS3UploadUrl.useMutation();
     const publishComment = trpc.comment.publish.useMutation();
+    const isPublishingComment = publishComment.isPending;
     const router = useRouter();
 
     // Clear existing images leaving page
@@ -101,7 +102,13 @@ const CommentBox = ({ articleId }: { articleId: string }) => {
                     <Toolbar className='mx-2' size={4} setContent={setContent} setImages={setImages} />
                 </div>
                 <div className='space-x-2'>
-                    <Button className='text-base font-medium' variant='type6' size='md' onClick={handlePublish}>
+                    <Button
+                        className='text-base font-medium'
+                        variant='type6'
+                        size='md'
+                        onClick={handlePublish}
+                        disabled={isPublishingComment}
+                    >
                         Submit
                     </Button>
                     <Button

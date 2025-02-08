@@ -8,7 +8,9 @@ import { Avatar, AvatarImage, AvatarFallback } from '~/components/ui/avatar';
 import { Card, CardHeader, CardContent, CardFooter } from '~/components/ui/card';
 
 import { BookmarkIcon } from '~/components/icons';
+import { MarkdownWrapper } from '~/components/markdown';
 import { cn } from '~/lib/utils';
+import { trpc } from '~/trpc/client';
 
 const fakeComments = [
     {
@@ -112,7 +114,7 @@ const CommentList = ({ className, data }: { className?: string; data: Comment[] 
                                 })}
                             </span>
                         </div>
-                        <p className='mt-px text-base-200'>{comment.content}</p>
+                        <MarkdownWrapper className='mt-px text-base-200'>{comment.content}</MarkdownWrapper>
                     </div>
                 </div>
             ))}
@@ -129,7 +131,9 @@ const ArticleCard = ({
     showCommentsByDefault: boolean;
     data: Article;
 }) => {
-    const { title, commentsCount, reactionsCount, path, userId } = data;
+    const { id: articleId, title, commentsCount, reactionsCount, path, userId } = data;
+    const commentsResponse = trpc.comment.getByArticle.useQuery({ articleId });
+    const comments = commentsResponse.data?.success ? (commentsResponse.data.data.comments ?? []) : [];
     const [showComments, setShowComments] = useState(showCommentsByDefault);
 
     return (
@@ -161,7 +165,7 @@ const ArticleCard = ({
                         </Button>
                     </div>
                 </div>
-                {showComments ? <CommentList className='w-full' data={[]} /> : null}
+                {showComments ? <CommentList className='w-full' data={comments} /> : null}
                 {commentsCount > 0 ? (
                     <div className='w-full'>
                         <Button

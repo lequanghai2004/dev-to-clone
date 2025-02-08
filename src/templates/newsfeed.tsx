@@ -11,17 +11,19 @@ const NewsFeed = ({
     className?: string;
     data: Article[];
     showCommentsByDefault?: boolean;
-}) => (
-    <div className='flex w-full flex-col gap-y-2'>
-        {data.map((post, index) => (
-            <ArticleCard
-                key={index}
-                className={cn('w-full cursor-pointer border-0 bg-base-1000', className)}
-                data={post}
-                showCommentsByDefault={showCommentsByDefault}
-            />
-        ))}
-    </div>
-);
+}) => {
+    return (
+        <div className='flex w-full flex-col gap-y-2'>
+            {data.map((post, index) => (
+                <ArticleCard
+                    key={index}
+                    className={cn('w-full cursor-pointer border-0 bg-base-1000', className)}
+                    data={post}
+                    showCommentsByDefault={showCommentsByDefault}
+                />
+            ))}
+        </div>
+    );
+};
 
 export default NewsFeed;

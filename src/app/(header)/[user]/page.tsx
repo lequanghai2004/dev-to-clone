@@ -14,11 +14,13 @@ import { auth } from '~/server/auth/root';
 
 const ProfilePage = async ({ params }: { params: Promise<{ user: string }> }) => {
     const session = await auth();
-    const id = (await params).user;
-    const getUserResponse = await trpc.user.getById({ id });
+    const userResponse = await params;
+
+    const userId = userResponse.user;
+    const getUserResponse = await trpc.user.getById({ id: userId });
     const user = getUserResponse.data.user;
     if (!getUserResponse.success || !user) notFound();
-    const isMe = id == session?.user.id;
+    const isMe = userId == session?.user.id;
     let { name, color, image, biography, location, createdAt, github, linkedin, website, education, pronouns, work } =
         user;
 
@@ -36,8 +38,8 @@ const ProfilePage = async ({ params }: { params: Promise<{ user: string }> }) =>
     website ??= 'https://www.linkedin.com/in/lequanghai204/';
     location ??= 'Ho Chi Minh, Vietnam';
 
-    const getArticlesResponse = await trpc.article.getByUser({ userId: id });
-    const articles = getArticlesResponse.data.articles ?? [];
+    const getArticlesResponse = await trpc.article.getByUser({ userId: userId });
+    const articles = getArticlesResponse.success ? (getArticlesResponse.data.articles ?? []) : [];
 
     return (
         <div className='select-none'>
