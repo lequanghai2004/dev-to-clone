@@ -6,6 +6,30 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  codecov:
+    name: CodeCov for unit test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpx jest --coverage
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   sonarqube:
     name: SonarQube static code analysis
     runs-on: ubuntu-latest
@@ -25,7 +49,7 @@ jobs:
 
   vercel:
     name: Deploy production to Vercel
-    needs: sonarqube
+    needs: [codecov, sonarqube]
     runs-on: ubuntu-latest
     # Only deploy on push to main, not on pull requests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
