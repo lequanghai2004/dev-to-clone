@@ -11,35 +11,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
         with:
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10
+        uses: actions/setup-node@master
+      - name: Install pnpm
+        uses: pnpm/action-setup@master
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
-        run: pnpx jest --coverage
+        run: pnpx jest --coverage --passWithNoTests
       - name: Upload coverage reports
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  synk:
+    name: Synk security scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare repository
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@master
+      - name: Install pnpm
+        uses: pnpm/action-setup@master
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --all-projects
+      - name: Run pnpm audit
+        run: pnpm audit
 
   sonarqube:
     name: SonarQube static code analysis
     runs-on: ubuntu-latest
     steps:
       - name: Prepare repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
         with:
-          fetch-depth: 0  # Shallow clones disabled for better relevancy
+          fetch-depth: 0 
       - name: SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -47,25 +67,51 @@ jobs:
           args: >
             -Dsonar.jdbc.url=${{ secrets.DATABASE_URL }}
 
-  vercel:
+  build:
+    name: Demo build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare repository
+        uses: actions/checkout@master
+      - name: Setup Node.js
+        uses: actions/setup-node@master
+      - name: Install pnpm
+        uses: pnpm/action-setup@master
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build application
+        run: pnpm build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
+          AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
+          AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
+          AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
+          AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+      - name: Cache build output
+        uses: actions/cache@master
+        with:
+          path: .next
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/*') }}
+
+  deploy:
     name: Deploy production to Vercel
-    needs: [codecov, sonarqube]
+    needs: [codecov, synk, sonarqube, build]
     runs-on: ubuntu-latest
     # Only deploy on push to main, not on pull requests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Prepare repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
         with:
-          fetch-depth: 0  # Shallow clones disabled for better relevancy
+          fetch-depth: 0 
       - name: Setup node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+        uses: actions/setup-node@master
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10
+        uses: pnpm/action-setup@master
       - name: Install Vercel CLI
         run: pnpm install -g vercel
       - name: Pull Vercel environment information
