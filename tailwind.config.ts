@@ -32,8 +32,8 @@ export default {
             },
             borderRadius: {
                 lg: 'var(--radius)',
-                md: 'calc(var(--radius) - 2px)',
-                sm: 'calc(var(--radius) - 4px)',
+                md: 'calc(var(--radius) - 0.125px)',
+                sm: 'calc(var(--radius) - 0.25px)',
             },
             height: {
                 header: 'var(--header-height)',
