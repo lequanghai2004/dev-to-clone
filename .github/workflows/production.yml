@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5.0.0
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
@@ -40,7 +40,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5.0.0
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Run Snyk security scan
@@ -78,7 +78,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5.0.0
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Build application
@@ -113,7 +113,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v5.0.0
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        run: npm i -g pnpm
       - name: Install Vercel CLI
         run: pnpm install -g vercel
       - name: Pull Vercel environment information
