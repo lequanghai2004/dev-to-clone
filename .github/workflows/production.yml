@@ -16,12 +16,21 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm' # Enables caching for pnpm
+
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8 # Optional: match your local version
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Run tests
         run: pnpx jest --coverage --passWithNoTests
       - name: Upload coverage reports
