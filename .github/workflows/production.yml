@@ -16,7 +16,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -36,7 +35,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -73,7 +71,6 @@ jobs:
     steps:
       - name: Prepare repository
         uses: actions/checkout@master
-
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -107,7 +104,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0 
-
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install Vercel CLI
