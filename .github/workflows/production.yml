@@ -16,8 +16,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@master
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -37,8 +35,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@master
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -75,8 +71,6 @@ jobs:
     steps:
       - name: Prepare repository
         uses: actions/checkout@master
-      - name: Setup Node.js
-        uses: actions/setup-node@master
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install dependencies
@@ -110,8 +104,6 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0 
-      - name: Setup node.js
-        uses: actions/setup-node@master
       - name: Install pnpm
         uses: pnpm/action-setup@master
       - name: Install Vercel CLI
